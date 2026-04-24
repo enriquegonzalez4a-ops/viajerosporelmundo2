@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Viajeros Rebeca</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0e0e0e;
+      --white: #f8f6f2;
+      --sand: #e8e0d4;
+      --accent: #c4a882;
+      --text: #2a2a2a;
+      --muted: #8a8278;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.6rem 4rem;
+      background: rgba(248,246,242,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-color: var(--sand); }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      color: var(--black);
+      text-decoration: none;
+    }
+    .nav-logo span { font-style: italic; color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .nav-links a:hover { opacity: 1; }
+
+    .nav-cta {
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 0.65rem 1.6rem;
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 80px;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6rem 4rem 6rem 4rem;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 6vw, 6rem);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--black);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.4s forwards;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 420px;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.6s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.8s forwards;
+    }
+
+    .btn-primary {
+      padding: 1rem 2.4rem;
+      background: var(--black);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--accent); }
+
+    .btn-ghost {
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 2px;
+      transition: color 0.2s;
+    }
+    .btn-ghost:hover { color: var(--accent); }
+
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+      background: var(--sand);
+    }
+
+    .hero-img-grid {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .hero-img-grid > div {
+      background: var(--sand);
+      overflow: hidden;
+    }
+
+    .hero-img-grid img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.88;
+      transition: opacity 0.4s;
+    }
+    .hero-img-grid img:hover { opacity: 1; }
+
+    .hero-badge {
+      position: absolute;
+      bottom: 3rem;
+      left: -2rem;
+      background: var(--white);
+      padding: 1.6rem 2rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      opacity: 0;
+      animation: fadeUp 0.8s 1s forwards;
+    }
+    .hero-badge p { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+    .hero-badge strong { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--black); }
+
+    /* ── MARQUEE ── */
+    .marquee-bar {
+      background: var(--black);
+      color: var(--white);
+      padding: 1rem 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .marquee-track {
+      display: inline-block;
+      animation: marquee 22s linear infinite;
+    }
+    .marquee-track span {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-right: 3rem;
+    }
+    .marquee-track span em { color: var(--accent); font-style: normal; }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ── GUÍAS ── */
+    section { padding: 7rem 4rem; }
+
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--black);
+      margin-bottom: 1rem;
+    }
+    .section-title em { font-style: italic; color: var(--accent); }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 3.5rem;
+      gap: 2rem;
+    }
+    .section-header p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 360px;
+    }
+
+    /* ── CARDS GUÍAS ── */
+    .guides-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+    }
+
+    .guide-card {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      cursor: pointer;
+      background: var(--sand);
+    }
+
+    .guide-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.4s;
+    }
+    .guide-card:hover img { transform: scale(1.04); }
+
+    .guide-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(14,14,14,0.75) 0%, transparent 55%);
+    }
+
+    .guide-card-info {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 2rem;
+      transform: translateY(8px);
+      transition: transform 0.3s;
+    }
+    .guide-card:hover .guide-card-info { transform: translateY(0); }
+
+    .guide-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .guide-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 0.6rem;
+    }
+    .guide-meta {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 0.1em;
+    }
+    .guide-price {
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      background: var(--white);
+      padding: 0.5rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--black);
+    }
+
+    /* ── SORTEO ── */
+    .sorteo-section {
+      background: var(--black);
+      color: var(--white);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      padding: 0;
+    }
+
+    .sorteo-content {
+      padding: 7rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .sorteo-content .section-label { color: var(--accent); }
+
+    .sorteo-content .section-title { color: var(--white); }
+
+    .sorteo-content p {
+      color: rgba(255,255,255,0.6);
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+      font-size: 0.95rem;
+    }
+
+    .countdown {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .countdown-item {
+      text-align: center;
+    }
+
+    .countdown-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .countdown-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-top: 0.4rem;
+    }
+
+    .sorteo-form {
+      display: flex;
+      gap: 0;
+      max-width: 420px;
+    }
+
+    .sorteo-form input {
+      flex: 1;
+      padding: 1rem 1.2rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-right: none;
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      outline: none;
+    }
+    .sorteo-form input::placeholder { color: rgba(255,255,255,0.3); }
+    .sorteo-form input:focus { border-color: var(--accent); }
+
+    .sorteo-form button {
+      padding: 1rem 1.6rem;
+      background: var(--accent);
+      color: var(--black);
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .sorteo-form button:hover { background: var(--white); }
+
+    .sorteo-visual {
+      position: relative;
+      overflow: hidden;
+      min-height: 500px;
+    }
+    .sorteo-visual img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0.5;
+    }
+    .sorteo-prize {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      text-align: center;
+      padding: 3rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(14,14,14,0.7);
+      backdrop-filter: blur(8px);
+      width: 80%;
+    }
+    .sorteo-prize p { font-size: 0.68rem; letter-spacing: 0.26em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+    .sorteo-prize strong { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: var(--white); display: block; line-height: 1.3; }
+
+    /* ── PUBLICACIONES ── */
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 3rem;
+    }
+
+    .post-card {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 1.8rem;
+      align-items: start;
+      text-decoration: none;
+      color: inherit;
+    }
+    .post-card:hover .post-img img { transform: scale(1.05); }
+
+    .post-img {
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      background: var(--sand);
+    }
+    .post-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+
+    .post-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    .post-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 300;
+      line-height: 1.3;
+      color: var(--black);
+      margin-bottom: 0.7rem;
+    }
+    .post-excerpt {
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 0.8rem;
+    }
+    .post-date {
+      font-size: 0.7rem;
+      color: rgba(138,130,120,0.6);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── NEWSLETTER ── */
+    .newsletter-section {
+      background: var(--sand);
+      text-align: center;
+      padding: 7rem 4rem;
+    }
+
+    .newsletter-section .section-title {
+      margin-bottom: 1rem;
+    }
+
+    .newsletter-section p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 0;
+      max-width: 460px;
+      margin: 0 auto;
+    }
+
+    .newsletter-form input {
+      flex: 1;
+      padding: 1rem 1.4rem;
+      background: var(--white);
+      border: 1px solid rgba(0,0,0,0.1);
+      border-right: none;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      outline: none;
+    }
+    .newsletter-form input:focus { border-color: var(--accent); }
+
+    .newsletter-form button {
+      padding: 1rem 1.8rem;
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .newsletter-form button:hover { background: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 4rem;
+      border-top: 1px solid var(--sand);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      color: var(--black);
+    }
+    .footer-logo span { font-style: italic; color: var(--accent); }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      justify-content: center;
+    }
+    .footer-links a {
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--black); }
+
+    .footer-social {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .footer-social a {
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-social a:hover { color: var(--accent); }
+
+    .footer-copy {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: 0.68rem;
+      color: rgba(138,130,120,0.5);
+      letter-spacing: 0.1em;
+      padding-top: 2rem;
+      border-top: 1px solid var(--sand);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 2rem; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { height: 55vw; }
+      .hero-left { padding: 3rem 2rem; }
+      section { padding: 5rem 2rem; }
+      .guides-grid { grid-template-columns: 1fr 1fr; }
+      .sorteo-section { grid-template-columns: 1fr; }
+      .sorteo-visual { display: none; }
+      .posts-grid { grid-template-columns: 1fr; }
+      footer { grid-template-columns: 1fr; text-align: center; }
+      .footer-social { justify-content: center; }
+      .newsletter-form { flex-direction: column; }
+      .newsletter-form input { border-right: 1px solid rgba(0,0,0,0.1); border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">VIAJEROS <span>Rebeca</span></a>
+  <ul class="nav-links">
+    <li><a href="#guias">Guías</a></li>
+    <li><a href="#sorteo">Sorteo</a></li>
+    <li><a href="#blog">Publicaciones</a></li>
+    <li><a href="#newsletter">Newsletter</a></li>
+  </ul>
+  <a href="#guias" class="nav-cta">Ver guías</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Editorial de viajes</p>
+    <h1 class="hero-title">El mundo,<br><em>en tus manos.</em></h1>
+    <p class="hero-desc">Guías de viaje creadas con alma. Descubre destinos únicos, inspírate con nuestras publicaciones y participa en nuestros sorteos exclusivos.</p>
+    <div class="hero-actions">
+      <a href="#guias" class="btn-primary">Explorar guías</a>
+      <a href="#sorteo" class="btn-ghost">Sorteo activo →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-grid">
+      <div>
+        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80" alt="Montañas" />
+      </div>
+      <div>
+        <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=80" alt="Playa tropical" />
+      </div>
+    </div>
+    <div class="hero-badge">
+      <p>Guías publicadas</p>
+      <strong>24+</strong>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-bar">
+  <div class="marquee-track">
+    <span>Islandia <em>✦</em></span>
+    <span>Tailandia <em>✦</em></span>
+    <span>Maldivas <em>✦</em></span>
+    <span>Indonesia <em>✦</em></span>
+    <span>Japón <em>✦</em></span>
+    <span>Portugal <em>✦</em></span>
+    <span>Marruecos <em>✦</em></span>
+    <span>Sri Lanka <em>✦</em></span>
+    <span>Grecia <em>✦</em></span>
+    <span>Perú <em>✦</em></span>
+    <span>Islandia <em>✦</em></span>
+    <span>Tailandia <em>✦</em></span>
+    <span>Maldivas <em>✦</em></span>
+    <span>Indonesia <em>✦</em></span>
+    <span>Japón <em>✦</em></span>
+    <span>Portugal <em>✦</em></span>
+    <span>Marruecos <em>✦</em></span>
+    <span>Sri Lanka <em>✦</em></span>
+    <span>Grecia <em>✦</em></span>
+    <span>Perú <em>✦</em></span>
+  </div>
+</div>
+
+<!-- GUÍAS -->
+<section id="guias">
+  <div class="section-header reveal">
+    <div>
+      <p class="section-label">Nuestras guías</p>
+      <h2 class="section-title">Destinos que<br><em>inspiran</em></h2>
+    </div>
+    <p>Cada guía es una invitación a explorar. Rutas, consejos, gastronomía y los secretos que solo los viajeros de verdad conocen.</p>
+  </div>
+  <div class="guides-grid">
+
+    <div class="guide-card reveal">
+      <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80" alt="Islandia" />
+      <div class="guide-card-overlay"></div>
+      <div class="guide-price">18 €</div>
+      <div class="guide-card-info">
+        <p class="guide-tag">Europa del Norte</p>
+        <p class="guide-name">Islandia</p>
+        <p class="guide-meta">240 páginas · PDF + impresa</p>
+      </div>
+    </div>
+
+    <div class="guide-card reveal">
+      <img src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=600&q=80" alt="Tailandia" />
+      <div class="guide-card-overlay"></div>
+      <div class="guide-price">16 €</div>
+      <div class="guide-card-info">
+        <p class="guide-tag">Sudeste Asiático</p>
+        <p class="guide-name">Tailandia</p>
+        <p class="guide-meta">210 páginas · PDF + impresa</p>
+      </div>
+    </div>
+
+    <div class="guide-card reveal">
+      <img src="https://images.unsplash.com/photo-1573790387438-4da905039392?w=600&q=80" alt="Japón" />
+      <div class="guide-card-overlay"></div>
+      <div class="guide-price">19 €</div>
+      <div class="guide-card-info">
+        <p class="guide-tag">Asia Oriental</p>
+        <p class="guide-name">Japón</p>
+        <p class="guide-meta">260 páginas · PDF + impresa</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SORTEO -->
+<div class="sorteo-section" id="sorteo">
+  <div class="sorteo-content">
+    <p class="section-label">Sorteo activo</p>
+    <h2 class="section-title">Gana tu próximo<br><em>destino</em></h2>
+    <p>Participa en nuestro sorteo mensual y llévate una guía de viaje a tu elección completamente gratis. Solo necesitas tu email.</p>
+    <div class="countdown" id="countdown">
+      <div class="countdown-item"><div class="countdown-num" id="cd-days">12</div><div class="countdown-label">días</div></div>
+      <div class="countdown-item"><div class="countdown-num" id="cd-hours">08</div><div class="countdown-label">horas</div></div>
+      <div class="countdown-item"><div class="countdown-num" id="cd-mins">45</div><div class="countdown-label">minutos</div></div>
+      <div class="countdown-item"><div class="countdown-num" id="cd-secs">30</div><div class="countdown-label">segundos</div></div>
+    </div>
+    <form class="sorteo-form" onsubmit="handleSorteo(event)">
+      <input type="email" placeholder="tu@email.com" required />
+      <button type="submit">Participar</button>
+    </form>
+  </div>
+  <div class="sorteo-visual">
+    <img src="https://images.unsplash.com/photo-1488085061387-422e29b40080?w=800&q=80" alt="Viaje" />
+    <div class="sorteo-prize">
+      <p>Premio de este mes</p>
+      <strong>Guía completa + pack viajero valorado en 80€</strong>
+    </div>
+  </div>
+</div>
+
+<!-- PUBLICACIONES -->
+<section id="blog">
+  <div class="section-header reveal">
+    <div>
+      <p class="section-label">Publicaciones</p>
+      <h2 class="section-title">Últimas<br><em>historias</em></h2>
+    </div>
+    <p>Relatos, consejos y rutas escritas por viajeros reales. Inspiración sin filtros para tu próxima aventura.</p>
+  </div>
+  <div class="posts-grid">
+
+    <a class="post-card reveal" href="#">
+      <div class="post-img">
+        <img src="https://images.unsplash.com/photo-1498307833015-e7b400441eb8?w=400&q=80" alt="Maldivas" />
+      </div>
+      <div>
+        <p class="post-tag">Oceano Índico</p>
+        <p class="post-title">Maldivas sin dejarte el sueldo: lo que nadie te cuenta</p>
+        <p class="post-excerpt">Guesthouses, atolones locales y los trucos que usamos para estar 10 días con presupuesto real.</p>
+        <p class="post-date">18 Abril 2025</p>
+      </div>
+    </a>
+
+    <a class="post-card reveal" href="#">
+      <div class="post-img">
+        <img src="https://images.unsplash.com/photo-1504214208698-ea1916a2195a?w=400&q=80" alt="Indonesia" />
+      </div>
+      <div>
+        <p class="post-tag">Sudeste Asiático</p>
+        <p class="post-title">Bali más allá de Ubud: los rincones que aún no están en Instagram</p>
+        <p class="post-excerpt">Playas vacías, arrozales sin turistas y una cultura que te cambia si te atreves a salir del circuito.</p>
+        <p class="post-date">5 Abril 2025</p>
+      </div>
+    </a>
+
+    <a class="post-card reveal" href="#">
+      <div class="post-img">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" alt="Filipinas" />
+      </div>
+      <div>
+        <p class="post-tag">Asia</p>
+        <p class="post-title">Filipinas: por qué este archipiélago te robará el corazón</p>
+        <p class="post-excerpt">Más de 7.000 islas y casi ningún turista europeo. La oportunidad perfecta para descubrirlas antes que todos.</p>
+        <p class="post-date">22 Marzo 2025</p>
+      </div>
+    </a>
+
+    <a class="post-card reveal" href="#">
+      <div class="post-img">
+        <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&q=80" alt="Sri Lanka" />
+      </div>
+      <div>
+        <p class="post-tag">Asia del Sur</p>
+        <p class="post-title">Sri Lanka en 2 semanas: la ruta que lo tiene todo</p>
+        <p class="post-excerpt">Templos, trenes entre montañas, ballenas azules y comida que no encontrarás en ningún otro sitio del mundo.</p>
+        <p class="post-date">10 Marzo 2025</p>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter-section" id="newsletter">
+  <div class="reveal">
+    <p class="section-label" style="text-align:center">Comunidad</p>
+    <h2 class="section-title" style="text-align:center">Viaja con <em>nosotros</em></h2>
+    <p>Suscríbete y recibe cada semana inspiración de viaje, descuentos exclusivos en guías y acceso prioritario a los sorteos.</p>
+    <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+      <input type="email" placeholder="tu@email.com" required />
+      <button type="submit">Suscribirme</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">VIAJEROS <span>Rebeca</span></div>
+  <ul class="footer-links">
+    <li><a href="#guias">Guías</a></li>
+    <li><a href="#sorteo">Sorteo</a></li>
+    <li><a href="#blog">Blog</a></li>
+    <li><a href="#">Contacto</a></li>
+    <li><a href="#">Aviso legal</a></li>
+  </ul>
+  <div class="footer-social">
+    <a href="#">Instagram</a>
+    <a href="#">TikTok</a>
+    <a href="#">Pinterest</a>
+  </div>
+  <p class="footer-copy">© 2025 Viajeros Rebeca · Todos los derechos reservados</p>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Countdown
+  const target = new Date();
+  target.setDate(target.getDate() + 12);
+  target.setHours(target.getHours() + 8);
+
+  function updateCountdown() {
+    const now = new Date();
+    const diff = target - now;
+    if (diff <= 0) return;
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-days').textContent = String(d).padStart(2,'0');
+    document.getElementById('cd-hours').textContent = String(h).padStart(2,'0');
+    document.getElementById('cd-mins').textContent = String(m).padStart(2,'0');
+    document.getElementById('cd-secs').textContent = String(s).padStart(2,'0');
+  }
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+
+  // Forms
+  function handleSorteo(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.textContent = '¡Apuntado! ✓';
+    btn.style.background = '#4caf6e';
+    e.target.reset();
+  }
+  function handleNewsletter(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.textContent = '¡Suscrito! ✓';
+    btn.style.background = '#c4a882';
+    e.target.reset();
+  }
+</script>
+</body>
+</html>
